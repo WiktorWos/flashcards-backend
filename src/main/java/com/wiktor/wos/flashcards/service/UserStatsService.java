@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class UserStatsService {
-    private UserStatsRepo userStatsRepo;
+    private final UserStatsRepo userStatsRepo;
 
     @Autowired
     public UserStatsService(UserStatsRepo userStatsRepo) {
