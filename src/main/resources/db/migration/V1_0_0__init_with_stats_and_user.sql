@@ -1,4 +1,4 @@
-create table user_stats
+create table if not exists user_stats
 (
     id                 bigserial
         constraint user_stats_pk
@@ -14,10 +14,10 @@ create table user_stats
 alter table user_stats
     owner to postgres;
 
-create unique index user_stats_user_id_uindex
+create unique index if not exists user_stats_user_id_uindex
     on user_stats (user_id);
 
-create table time_logs
+create table if not exists time_logs
 (
     id               bigserial
         constraint time_logs_pk
@@ -32,7 +32,7 @@ create table time_logs
 alter table time_logs
     owner to postgres;
 
-create table set_stats
+create table if not exists set_stats
 (
     id                 bigserial
         constraint set_stats_pk
@@ -45,10 +45,10 @@ create table set_stats
 alter table set_stats
     owner to postgres;
 
-create unique index set_stats_set_id_uindex
+create unique index if not exists set_stats_set_id_uindex
     on set_stats (set_id);
 
-create table users
+create table if not exists users
 (
     id         bigserial
         constraint users_pk
