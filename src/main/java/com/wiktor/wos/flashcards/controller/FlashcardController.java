@@ -1,6 +1,8 @@
 package com.wiktor.wos.flashcards.controller;
 
 import com.wiktor.wos.flashcards.dto.FlashcardDto;
+import com.wiktor.wos.flashcards.dto.PlayedFlashcardDto;
+import com.wiktor.wos.flashcards.service.FlashcardService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -8,9 +10,15 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("api/flashcards")
 public class FlashcardController {
+    private final FlashcardService flashcardService;
+
+    public FlashcardController(FlashcardService flashcardService) {
+        this.flashcardService = flashcardService;
+    }
+
     @PostMapping
-    public ResponseEntity<FlashcardDto> createFlashcard() throws Exception {
-        return new ResponseEntity<>(new FlashcardDto(), HttpStatus.CREATED);
+    public ResponseEntity<PlayedFlashcardDto> createFlashcard(@RequestBody PlayedFlashcardDto dto) throws Exception {
+        return new ResponseEntity<>(flashcardService.createFlashcard(dto), HttpStatus.OK);
     }
 
     @PutMapping("{id}")

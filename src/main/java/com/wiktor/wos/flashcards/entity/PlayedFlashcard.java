@@ -3,11 +3,9 @@ package com.wiktor.wos.flashcards.entity;
 import com.wiktor.wos.flashcards.entity.generic.GenericEntity;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.Cascade;
 
-import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
@@ -18,9 +16,9 @@ public class PlayedFlashcard extends GenericEntity {
     private Integer currentLevel;
     private LocalDateTime levelChangeDate;
 
-    @ManyToOne
-    private Set set;
+    @ManyToOne(cascade = CascadeType.PERSIST)
+    private UserSet set;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.PERSIST)
     private FlashcardDefinition flashcardDefinition;
 }
