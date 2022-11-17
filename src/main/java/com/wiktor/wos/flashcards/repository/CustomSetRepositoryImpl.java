@@ -27,50 +27,26 @@ public class CustomSetRepositoryImpl implements CustomSetRepository {
     @Override
     public List<Set> browse(SharedSetsBrowserRequest request) {
         var query = queryFactory.selectFrom(set);
-        if(request.getLanguage() != null) {
-            var languageSearch = request.getLanguage().getSearch();
-            if (StringUtils.isNotBlank(languageSearch)) {
-                query.where(set.language.like(languageSearch + "%"));
-            }
+        if(request != null) {
+            query = where(query, request);
+            query = orderBy(query, request);
+            query = limit(query, request);
         }
-
-        if (request.getCategory() != null) {
-            var categorySearch = request.getCategory().getSearch();
-            if (StringUtils.isNotBlank(categorySearch)) {
-                query.where(set.category.like(categorySearch));
-            }
-        }
-
-        if (request.getCreateDate() != null) {
-            var createDateSearchFrom = request.getCreateDate().getSearch();
-            var createDateSearchTo = request.getCreateDate().getSearchTo();
-            if (createDateSearchFrom != null) {
-                query.where(set.createDate.after(createDateSearchFrom));
-                if (createDateSearchTo != null) {
-                    query.where(set.createDate.before(createDateSearchTo));
-                }
-            }
-        }
-//        if(request != null) {
-//            where(query, request);
-//            orderBy(query, request);
-//            limit(query, request);
-//        }
         return query.fetch();
     }
 
-    private void where(JPAQuery<Set> query, SharedSetsBrowserRequest request) {
+    private JPAQuery<Set> where(JPAQuery<Set> query, SharedSetsBrowserRequest request) {
         if(request.getLanguage() != null) {
             var languageSearch = request.getLanguage().getSearch();
             if (StringUtils.isNotBlank(languageSearch)) {
-                query.where(set.language.eq(languageSearch));
+                query = query.where(set.language.like(languageSearch + "%"));
             }
         }
 
         if (request.getCategory() != null) {
             var categorySearch = request.getCategory().getSearch();
             if (StringUtils.isNotBlank(categorySearch)) {
-                query.where(set.category.like(categorySearch));
+                query = query.where(set.category.like(categorySearch + "%"));
             }
         }
 
@@ -78,20 +54,21 @@ public class CustomSetRepositoryImpl implements CustomSetRepository {
             var createDateSearchFrom = request.getCreateDate().getSearch();
             var createDateSearchTo = request.getCreateDate().getSearchTo();
             if (createDateSearchFrom != null) {
-                query.where(set.createDate.after(createDateSearchFrom));
+                query = query.where(set.createDate.after(createDateSearchFrom));
                 if (createDateSearchTo != null) {
-                    query.where(set.createDate.before(createDateSearchTo));
+                    query = query.where(set.createDate.before(createDateSearchTo));
                 }
             }
         }
+        return query;
     }
 
-    private void orderBy(JPAQuery<Set> query, SharedSetsBrowserRequest request) {
+    private JPAQuery<Set> orderBy(JPAQuery<Set> query, SharedSetsBrowserRequest request) {
         var language = request.getLanguage();
         if (language != null) {
             if (language.isSort()) {
                 var orderSpecifier = language.isAsc() ? set.language.asc() : set.language.desc();
-                query.orderBy(orderSpecifier);
+                query = query.orderBy(orderSpecifier);
             }
         }
 
@@ -99,7 +76,7 @@ public class CustomSetRepositoryImpl implements CustomSetRepository {
         if (category != null) {
             if (category.isSort()) {
                 var orderSpecifier = category.isAsc() ? set.category.asc() : set.category.desc();
-                query.orderBy(orderSpecifier);
+                query = query.orderBy(orderSpecifier);
             }
         }
 
@@ -107,13 +84,14 @@ public class CustomSetRepositoryImpl implements CustomSetRepository {
         if (createDate != null) {
             if (createDate.isSort()) {
                 var orderSpecifier = createDate.isAsc() ? set.createDate.asc() : set.createDate.desc();
-                query.orderBy(orderSpecifier);
+                query = query.orderBy(orderSpecifier);
             }
         }
+        return query;
     }
 
-    private void limit(JPAQuery<Set> query, SharedSetsBrowserRequest request) {
-        var offset = request.getLimit() * request.getPage();
-        query.offset(offset).limit(request.getLimit());
+    private JPAQuery<Set> limit(JPAQuery<Set> query, SharedSetsBrowserRequest request) {
+        var offset = request.getLimit() * (request.getPage() - 1);
+        return query.offset(offset).limit(request.getLimit());
     }
 }
