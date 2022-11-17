@@ -1,6 +1,8 @@
 package com.wiktor.wos.flashcards.service;
 
 import com.wiktor.wos.flashcards.dto.SetDto;
+import com.wiktor.wos.flashcards.dto.browser.PageableResponse;
+import com.wiktor.wos.flashcards.dto.browser.SharedSetsBrowserRequest;
 import com.wiktor.wos.flashcards.entity.Set;
 import com.wiktor.wos.flashcards.entity.UserSet;
 import com.wiktor.wos.flashcards.exception.BadRequestException;
@@ -10,21 +12,17 @@ import com.wiktor.wos.flashcards.mapper.SetMapper;
 import com.wiktor.wos.flashcards.repository.SetRepository;
 import com.wiktor.wos.flashcards.repository.UserRepository;
 import com.wiktor.wos.flashcards.repository.UserSetRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class SetServiceImpl implements SetService {
     private final SetRepository setRepository;
     private final SetMapper setMapper;
     private final UserRepository userRepository;
-
-    public SetServiceImpl(SetRepository setRepository, SetMapper setMapper, UserRepository userRepository) {
-        this.setRepository = setRepository;
-        this.setMapper = setMapper;
-        this.userRepository = userRepository;
-    }
 
     @Override
     public SetDto createSet(SetDto setDto) {
@@ -78,5 +76,11 @@ public class SetServiceImpl implements SetService {
         set.getUsers().remove(user);
         setRepository.save(set);
         return id;
+    }
+
+    @Override
+    public PageableResponse<SetDto> browseSharedSets(SharedSetsBrowserRequest request) {
+        var sets = setRepository.browse(request);
+        return new PageableResponse<SetDto>(sets.size(), request.getPage(), setMapper.mapToDtoList(sets));
     }
 }

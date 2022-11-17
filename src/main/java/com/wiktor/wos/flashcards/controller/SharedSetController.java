@@ -1,6 +1,8 @@
 package com.wiktor.wos.flashcards.controller;
 
 import com.wiktor.wos.flashcards.dto.SetDto;
+import com.wiktor.wos.flashcards.dto.browser.PageableResponse;
+import com.wiktor.wos.flashcards.dto.browser.SharedSetsBrowserRequest;
 import com.wiktor.wos.flashcards.security.MyUserPrincipal;
 import com.wiktor.wos.flashcards.service.SetService;
 import org.springframework.http.HttpStatus;
@@ -28,7 +30,7 @@ public class SharedSetController {
     }
 
     @PostMapping("browser")
-    public ResponseEntity<SetDto> browseSharedSets() throws Exception {
-        return new ResponseEntity<>(new SetDto(), HttpStatus.OK);
+    public ResponseEntity<PageableResponse<SetDto>> browseSharedSets(@RequestBody SharedSetsBrowserRequest request) throws Exception {
+        return new ResponseEntity<>(setService.browseSharedSets(request), HttpStatus.OK);
     }
 }
