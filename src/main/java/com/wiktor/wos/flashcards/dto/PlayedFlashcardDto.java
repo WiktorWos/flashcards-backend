@@ -12,6 +12,7 @@ public class PlayedFlashcardDto {
     private Integer currentLevel;
     private LocalDateTime levelChangeDate;
     private Long setId;
+    private Long userId;
     private String front;
     private String back;
     private String frontDefinition;

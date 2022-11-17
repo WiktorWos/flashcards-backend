@@ -28,5 +28,5 @@ public class Set extends GenericEntity {
         joinColumns = {@JoinColumn(name = "set_id")},
         inverseJoinColumns = {@JoinColumn(name = "user_id")}
     )
-    private List<User> users;
+    private java.util.Set<User> users;
 }

@@ -17,6 +17,10 @@ public class PlayedFlashcard extends GenericEntity {
     private LocalDateTime levelChangeDate;
 
     @ManyToOne(cascade = CascadeType.PERSIST)
+    @JoinColumns({
+            @JoinColumn(name="user_id", referencedColumnName="user_id"),
+            @JoinColumn(name="set_id", referencedColumnName="set_id")
+    })
     private UserSet set;
 
     @ManyToOne(cascade = CascadeType.PERSIST)

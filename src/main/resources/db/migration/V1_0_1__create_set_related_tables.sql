@@ -45,16 +45,16 @@ alter table sets
 
 create table if not exists users_sets
 (
-    id      bigint default nextval('flashcards.users_shared_sets_id_seq'::regclass) not null
-        constraint users_shared_sets_pk
-            primary key,
-    user_id bigint
-        constraint users_shared_sets_users_id_fk
+    user_id bigint not null
+        constraint table_name_users_id_fk
             references users,
-    set_id  bigint
-        constraint users_shared_sets_sets_id_fk
-            references sets
+    set_id  bigint not null
+        constraint table_name_sets_id_fk
+            references sets,
+    constraint table_name_pkey
+        primary key (user_id, set_id)
 );
+
 
 alter table users_sets
     owner to postgres;
@@ -69,9 +69,11 @@ create table if not exists played_flashcards
     flashcard_definition_id bigint
         constraint played_flashcard_flashcard_definitions_id_fk
             references flashcard_definitions,
-    set_id                  bigint
-        constraint played_flashcard_users_sets_id_fk
-            references users_sets
+    set_id                  bigint,
+    user_id                 bigint,
+    constraint played_flashcards_users_sets_user_id_set_id_fk
+        foreign key (user_id, set_id) references users_sets
+            on update cascade on delete cascade
 );
 
 alter table played_flashcards
