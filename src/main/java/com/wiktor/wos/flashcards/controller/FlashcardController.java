@@ -22,22 +22,24 @@ public class FlashcardController {
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<FlashcardDto> updateFlashcard(@PathVariable Long id) throws Exception {
-        return new ResponseEntity<>(new FlashcardDto(), HttpStatus.OK);
+    public ResponseEntity<PlayedFlashcardDto> updateFlashcard(@RequestBody PlayedFlashcardDto dto, @PathVariable Long id) throws Exception {
+        return new ResponseEntity<>(flashcardService.updateFlashcard(dto, id), HttpStatus.OK);
     }
 
     @DeleteMapping("{id}")
     public ResponseEntity<Long> deleteFlashcard(@PathVariable Long id) throws Exception {
-        return new ResponseEntity<>(1L, HttpStatus.OK);
+        return new ResponseEntity<>(flashcardService.deleteFlashcard(id), HttpStatus.OK);
     }
 
     @PatchMapping("/{id}/correct")
-    public ResponseEntity<FlashcardDto> markFlashcardAsRemembered(@PathVariable Long id) throws Exception {
-        return new ResponseEntity<>(new FlashcardDto(), HttpStatus.CREATED);
+    public ResponseEntity<Void> markFlashcardAsRemembered(@PathVariable Long id) throws Exception {
+        flashcardService.markFlashcardAsRemembered(id);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @PatchMapping("/{id}/wrong")
-    public ResponseEntity<FlashcardDto> markFlashcardAsForgotten(@PathVariable Long id) throws Exception {
-        return new ResponseEntity<>(new FlashcardDto(), HttpStatus.CREATED);
+    public ResponseEntity<Void> markFlashcardAsForgotten(@PathVariable Long id) throws Exception {
+        flashcardService.markFlashcardAsForgotten(id);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 }

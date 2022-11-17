@@ -22,7 +22,7 @@ public class Set extends GenericEntity {
     @ManyToOne()
     private User owner;
 
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
         name = "users_sets",
         joinColumns = {@JoinColumn(name = "set_id")},

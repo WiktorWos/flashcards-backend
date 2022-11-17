@@ -10,4 +10,6 @@ public interface SetService {
     Long deleteSet(Long id);
     List<SetDto> getAllSets();
     SetDto getSet(Long id);
+    SetDto addSharedSet(Long id, String email);
+    Long deleteSharedSet(Long id, String email);
 }
